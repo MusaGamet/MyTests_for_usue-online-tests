@@ -1,0 +1,51 @@
+﻿@using Test_Wrapper
+@model List<ITestCreator>
+
+@{
+    ViewData["Title"] = "Доступные тесты";
+}
+
+@section Scripts
+    {
+    <link rel="stylesheet" href="css/group.css" />
+}
+
+<div class="prose">
+    <h1 class="mb-8">Доступные тесты</h1>
+</div>
+
+<div class="flex-container">
+    @{
+        List<IGrouping<string, ITestCreator>> groups = Model.Where(creator => creator is ITestGroup).GroupBy(
+        creator => (creator as ITestGroup)?.GroupName).OrderBy(creators => creators.Key).ToList();
+
+        foreach (IGrouping<string, ITestCreator> testCreators in groups)
+        {
+            <h3 class="group-name">@testCreators.Key</h3>
+
+            foreach (ITestCreator testCreator in testCreators)
+            {
+                <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@testCreator.TestID">
+                    <div class="card-body">
+                        <h2 class="card-title">@testCreator.Name</h2>
+                        <p>@testCreator.Description</p>
+                    </div>
+                </a>
+            }
+        }
+    }
+    <h3 class="group-name">Тесты без группы</h3>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        if (!(Model[i] is ITestGroup))
+        {
+
+            <a class="card bg-base-100 shadow-md hover:shadow-lg" href="/tests/start?id=@Model[i].TestID">
+                <div class="card-body">
+                    <h2 class="card-title">@Model[i].Name</h2>
+                    <p>@Model[i].Description</p>
+                </div>
+            </a>
+        }
+    }
+</div>

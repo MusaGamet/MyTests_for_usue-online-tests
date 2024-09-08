@@ -1,0 +1,34 @@
+﻿@using usue_online_tests.Models
+@model IEnumerable<Exam>
+
+@if (Model != null)
+{
+    <div class="test-card-wrapper">
+        @if (!Model.Any())
+        {
+            <p>Нет доступных тестов</p>
+        }
+
+        @foreach (var exam in Model)
+        {
+            <div class="test-card">
+                <p class="test-card-title">@exam.Preset.Name</p>
+                <p class="test-card-creator test-card-info">Создатель: @exam.Preset.Owner.Name</p>
+                <p class="test-card-count-tests test-card-info">Количество тестов: @exam.Preset.Tests.Length</p>
+                <p class="test-card-timestart test-card-info">Задание выдано: @exam.DateTimeStart</p>
+                <p class="test-card-timeend test-card-info">Необходимо закончить тестирование до: @exam.DateTimeEnd</p>
+                @if (exam.Preset.TimeLimited)
+                {
+                    <p class="test-card-min test-card-info">Время на прохождение ограничено!</p>
+                }
+                <a class="btn test-card-button" href="/exam/starttest?examId=@exam.Id&testNumber=1">@(exam.Preset.IsHomework ? "Начать выполнение домашнего задания" : "Начать тест")</a>
+            </div>
+        }
+    </div>
+}
+
+
+@section Scripts
+    {
+    <link type="text/css" rel="stylesheet" href="/css/availabletests.css" />
+}

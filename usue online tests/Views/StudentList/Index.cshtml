@@ -1,0 +1,51 @@
+﻿@model List<IGrouping<string, User>>
+
+@{
+    ViewData["Title"] = "Списки студентов";
+
+    Dictionary<string, List<User>> usersList = new();
+
+    foreach (IGrouping<string, User> grouping in Model)
+    {
+        usersList.Add(grouping.Key, grouping.OrderBy(user => user.Name).ToList());
+    }
+}
+
+@section Scripts
+    {
+    <link rel="stylesheet" href="css/studentlist.css" />
+}
+
+<div class="prose">
+    <h1>Управление списками студентов</h1>
+</div>
+
+<div class="btn-container">
+    <form method="get" action="/studentlist/createpage">
+        <button class="btn btn-success btn-create-studentlist" type="submit">Создать группу</button>
+    </form>
+
+    <form method="get" action="/users">
+        <button class="btn btn-success btn-create-studentlist" style="margin-left: 40px" type="submit">Изменить пользователей</button>
+    </form>
+</div>
+
+<div class="prose">
+    <h1>Списки студентов</h1>
+
+    @foreach (var key in usersList.Keys)
+    {
+        <div class="line-div">
+            <h3 class="group-name">@key</h3>
+            <form method="post" action="/api/deletegroup?groupname=@key">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+        </div>
+        <ul>
+            @foreach (User user in usersList[key])
+            {
+                <li>@user.Name</li>
+            }
+        </ul>
+    }
+</div>

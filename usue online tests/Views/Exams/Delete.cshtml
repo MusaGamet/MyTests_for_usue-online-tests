@@ -1,0 +1,36 @@
+﻿@model usue_online_tests.Models.Exam
+
+@{
+    ViewData["Title"] = "Удаление теста";
+}
+
+<h3 style="font-size: larger; color: red">Вы действительно хотите удалить данный тест?
+    После этого пропадут все результаты (возможность создать отчет тоже)! Это действие невозможно отменить!</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Группа:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Group)
+        </dd>
+        <dt class = "col-sm-2">
+            Время начала:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateTimeStart)
+        </dd>
+        <dt class="col-sm-2">
+            Время окончания:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateTimeEnd)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+    </form>
+</div>

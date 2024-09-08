@@ -1,0 +1,32 @@
+﻿@using Microsoft.Extensions.Primitives
+@model TestWrapper
+
+@section Scripts
+    {
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js", "/libs/forminput.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [
+                ["$", "$"],
+                ["\\(", "\\)"]
+                ],
+                TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
+            },
+            showMathMenu: false,
+            messageStyle: "none"
+        });
+    </script>
+
+    <script src="/js/timer.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/starttest.css" />
+    <link type="text/css" rel="stylesheet" href="/css/themestyle.css" />
+    <link type="text/css" rel="stylesheet" href="/css/alltest.css" />
+}
+
+
+@{
+    await Html.RenderPartialAsync("Test", Model);
+}

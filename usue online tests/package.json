@@ -1,0 +1,32 @@
+{
+  "name": "usue-online-tests",
+  "version": "1.0.0",
+  "description": "",
+  "source": [
+    "Assets/index.js",
+    "Assets/index.css"
+  ],
+  "targets": {
+    "default": {
+      "distDir": "wwwroot/bundles"
+    }
+  },
+  "scripts": {
+    "dev": "parcel watch",
+    "build": "parcel build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.2",
+    "parcel": "^2.3.1",
+    "tailwindcss": "^3.0.24"
+  },
+  "dependencies": {
+    "daisyui": "^2.14.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-select": "^5.2.2"
+  }
+}

@@ -1,0 +1,31 @@
+﻿@model usue_online_tests.Models.TestPreset
+
+@{
+    ViewData["Title"] = "Создание шаблона";
+}
+
+<div class="prose">
+    <h1 class="mb-4">Создание шаблона</h1>
+</div>
+
+<form method="post" action="/testpresets/create">
+    <label class="label label-text">Название</label>
+    <input name="name" class="input input-bordered w-full max-w-xs" />
+    <label class="label label-text">Тесты</label>
+    <div id="select-tests"></div>
+    <input name="Tests" hidden />
+    <label class="label cursor-pointer w-52 my-4">
+        <input class="checkbox" type="checkbox" name="timeLimited" id="timeLimited" />
+        <span class="label-text">Ограничение по времени</span>
+    </label>
+    
+    <label class="label cursor-pointer w-52 my-4">
+        <input class="checkbox" type="checkbox" name="homework" id="homework" />
+        <span class="label-text">Домашнее задание</span>
+    </label>
+    @*    <label id="minutes-to-pass-container" class="input-group hidden mb-8">
+        <input type="number" class="input input-bordered w-full max-w-[244px]" name="minutesToPass" />
+        <span>минут</span>
+    </label>*@
+    <input class="btn" type="submit" value="Создать" />
+</form>

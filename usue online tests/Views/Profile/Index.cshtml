@@ -1,0 +1,164 @@
+﻿@using usue_online_tests.Models.View
+@inject GetUserByCookie UserByCookie
+@model IProfileWrapper
+
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="prose">
+    <h1>Профиль</h1>
+    <h2 class="mt-4">Здравствуйте, @Model.User.Name</h2>
+</div>
+
+
+
+@if (Model is UserProfileWrapper userProfileWrapper)
+{
+    @*    <div class="overflow-x-auto">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Доступно тестов</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Пройдено тестов</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Коэффициент понимания</div>
+                <div class="stat-value">0</div>
+            </div>
+        </div>
+    </div>*@
+
+    @if (userProfileWrapper.ExamResults != null)
+    {
+        <div class="grid gap-4 sm:grid-cols-2 mt-12">
+            @foreach (var examResult in userProfileWrapper.ExamResults)
+            {
+                var solved = examResult.ExamTestAnswers
+                .Where(answer => answer.CorrectAnswers != -1)
+                .Select(answer => answer.CorrectAnswers)
+                .Sum();
+
+                var total = examResult.ExamTestAnswers
+                .Where(answer => answer.CorrectAnswers != -1)
+                .Select(answer => answer.TotalAnswers)
+                .Sum();
+
+                <a class="card bg-base-100 shadow-md hover:shadow-lg" href="#">
+                    <div class="card-body">
+                        <h2 class="card-title">@examResult.Exam.Preset.Name</h2>
+                        <p class="font-bold">
+                            Выдано: <span class="font-normal">@examResult.DateTimeStart.ToString("dd.MM.yyyy")</span>
+                        </p>
+                        @if (solved > 0)
+                        {
+                            <progress class="progress progress-primary w-full mt-4" value="@solved" max="@total"></progress>
+                            <p class="test-result-text">@solved/@total</p>
+                        }
+                    </div>
+                </a>
+            }
+        </div>
+    }
+}
+
+@if (Model is TeacherProfileWrapper profileWrapper)
+{
+    <h2>Завершенные тесты</h2>
+
+    @*    <div class="test-results-wrapper">
+        @{
+            profileWrapper.ExamResults = profileWrapper.ExamResults.OrderBy(result => result.Exam.Group).ToArray();
+        }
+
+        @foreach (var examResult in profileWrapper.ExamResults)
+        {
+            <div class="test-result">
+                <p class="group-name">@examResult.Exam.Group</p>
+                <p class="date-start">@examResult.Exam.DateTimeStart</p>
+                <p class="preset-name">@examResult.Exam.Preset.Name</p>
+                <form action="/profile/createreport" method="get">
+                    <input hidden name="examId" value="@examResult.Exam.Id"/>
+                    <button class="btn btn-start" type="submit">Создать отчет</button>
+                </form>
+
+                <form action="/exams/Delete" method="get">
+                    <input type="hidden" name="id" value="@examResult.Exam.Id"/>
+                    <input type="submit" class="btn btn-start" value="Удалить тест"/>
+                </form>
+
+                @if (!examResult.Exam.IsEnd)
+                {
+                    <p class="info-p">Тест еще не завершен</p>
+                }
+            </div>
+        }
+    </div>*@
+
+
+
+    <div class="test-results-wrapper">
+        @{
+            var groupedResults = profileWrapper.ExamResults.GroupBy(x => x.Exam.Group).OrderBy(results => results.Key).ToArray();
+
+            var sortedResults = new IOrderedEnumerable<ExamResult>[groupedResults.Length];
+
+            for (var i = 0; i < sortedResults.Length; i++)
+            {
+                sortedResults[i] = groupedResults[i].OrderByDescending(exam => exam.Exam.DateTimeEnd);
+            }
+        }
+        @foreach (var group in sortedResults)
+        {
+            <div class="group-container">
+                <h2 class="container-name">@group.First().Exam.Group</h2>
+                <div class="test-results">
+                    @foreach (ExamResult result in group)
+                    {
+                        <div class="test-result">
+                            <p class="group-name">@result.Exam.Group</p>
+                            <p class="date-start">@result.Exam.DateTimeStart</p>
+                            <p class="preset-name">@result.Exam.Preset.Name</p>
+                            <form action="/profile/createreport" method="get">
+                                <input hidden name="examId" value="@result.Exam.Id" />
+                                <button class="btn btn-start" type="submit">Создать отчет</button>
+                            </form>
+
+                            <form action="/exams/Delete" method="get">
+                                <input type="hidden" name="id" value="@result.Exam.Id" />
+                                <input type="submit" class="btn btn-start" value="Удалить тест" />
+                            </form>
+
+                            @if (!result.Exam.IsEnd)
+                            {
+                                <p class="info-p">Тест еще не завершен</p>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@{
+    var user = UserByCookie.GetUser();
+    if (user.Role == Roles.Admin)
+    {
+        <div style="display: flex; flex-wrap: wrap; flex-direction: column">
+            <a href="/users">Users</a>
+            <a href="/exams">Exams</a>
+            <a href="/testpresetsedit">Presets</a>
+            <a href="/userexamresults">UserExamResults</a>
+            <a href="/examtestanswers">ExamTestAnswers</a>
+        </div>
+    }
+}
+
+@section Scripts
+    {
+    <link type="text/css" rel="stylesheet" href="/css/profile.css" />
+}

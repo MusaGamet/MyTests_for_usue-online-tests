@@ -1,0 +1,57 @@
+﻿@section Scripts
+    {
+    <script type="module" src="~/js/ai.js"></script>
+
+}
+
+<style>
+    .videoView {
+        display: flex;
+        justify-content: flex-start;
+        align-items: start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #box {
+        display: flex;
+        border: 10px solid transparent;
+    }
+
+    #webcamButton {
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+     #loading {
+        visibility: hidden;
+    }
+</style>
+
+<section id="demos" class="invisible">
+    <h2>Демо: Обнаружение изображений</h2>
+
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="image-blend-shapes"></ul>
+    </div>
+
+    <div id="liveView" class="videoView">
+        
+        
+        <button id="webcamButton" class="mdc-button mdc-button--raised">
+            ВКЛЮЧИТЬ ОБНАРУЖЕНИЕ
+        </button>
+        
+
+        <div id='loading'>Загрузка...</div>
+
+        <div style="position: relative;" id="box">
+            <video id="webcam" autoplay playsinline ></video>
+            <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+        </div>
+    </div>
+    <div class="blend-shapes">
+        <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+    </div>
+</section>
